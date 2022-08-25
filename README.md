@@ -2,8 +2,8 @@
 My personal internship project at Haute Ecole Leonard de Vinci, Institut Paul Lambin and at the Belgian company Persolis. It's a SAP project. The frontend is developped in SAPUI5 and the backend with Persolis' SAP system. The app helps company employees to record their commute to work and transmiss relavant commute data to the HR for remboursement. 
 
 ####Table of Content
-*[Technology]
-*[Launch]
-*[Functionalities]
-*[Using Systeme de gestion des frais de transport]
+1. [Technology]
+2. [Deployment and Launch]
+4. [Functionalities]
+5. [Using Systeme de gestion des frais de transport]
 
