@@ -1,0 +1,51 @@
+  method SOUS_TRAJETSET_UPDATE_ENTITY.
+
+  DATA return TYPE STANDARD TABLE OF bapireturn1.
+  DATA ls_return LIKE LINE OF return.
+  DATA lt_sous_trajet TYPE STANDARD TABLE OF zhr_sous_trajet.
+  DATA wa_sous_trajet LIKE LINE OF lt_sous_trajet.
+
+  DATA lt_keys      type /iwbep/t_mgw_tech_pairs.
+  DATA ls_key       type /iwbep/s_mgw_tech_pair.
+  DATA lv_ID TYPE zhr_sous_trajet-ID.
+  DATA lv_Fk TYPE zhr_sous_trajet-Fk_Trajet.
+
+  lt_keys = IO_TECH_REQUEST_CONTEXT->GET_KEYS( ).
+  READ TABLE lt_keys WITH KEY name = 'ID' INTO ls_key.
+  lv_ID = ls_key-value.
+  READ TABLE lt_keys WITH KEY name = 'FKTRAJET' INTO ls_key.
+  lv_Fk = ls_key-value.
+  READ TABLE lt_keys WITH KEY name = 'FKROUTINE' INTO ls_key.
+  lv_Fk = ls_key-value.
+
+  io_data_provider->read_entry_data( IMPORTING es_data = er_entity ).
+
+  wa_sous_trajet-mandt = sy-mandt.
+  wa_sous_trajet-ID = lv_ID.
+  wa_sous_trajet-nom = er_entity-nom.
+  wa_sous_trajet-begda = er_entity-begda.
+  wa_sous_trajet-endda = er_entity-endda.
+  wa_sous_trajet-distance_prevu = er_entity-distance_prevu.
+  wa_sous_trajet-distance_parcouru = er_entity-distance_parcouru.
+  wa_sous_trajet-temps_prevu = er_entity-temps_prevu.
+  wa_sous_trajet-temps_en_motion = er_entity-temps_en_motion.
+  wa_sous_trajet-transport = er_entity-transport.
+  wa_sous_trajet-depart = er_entity-depart.
+  wa_sous_trajet-montant_rembourse = er_entity-montant_rembourse.
+  wa_sous_trajet-frais = er_entity-frais.
+  wa_sous_trajet-etat = er_entity-etat.
+  wa_sous_trajet-destination = er_entity-destination.
+  wa_sous_trajet-FK_trajet = er_entity-FK_trajet.
+  wa_sous_trajet-FK_routine = er_entity-FK_routine.
+
+  APPEND wa_sous_trajet TO lt_sous_trajet.
+
+  MODIFY zhr_sous_trajet FROM TABLE lt_sous_trajet.
+
+  LOOP AT return INTO ls_return WHERE TYPE EQ 'E'.
+    RAISE EXCEPTION TYPE /IWBEP/CX_MGW_BUSI_EXCEPTION
+    EXPORTING textid = /IWBEP/CX_MGW_BUSI_EXCEPTION=>business_error
+    message = ls_return-message.
+  ENDLOOP.
+
+  endmethod.

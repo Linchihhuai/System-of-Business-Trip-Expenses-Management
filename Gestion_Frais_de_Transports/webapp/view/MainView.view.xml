@@ -1,0 +1,112 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:si="sap.suite.ui.commons.statusindicator" controllerName="fiori.gft.Gestion_Frais_de_Transports.controller.MainView"
+	viewName="MainView">
+	<App id="appControl">
+		<pages>
+			<Page title="{i18n>title}">
+				<footer>
+					<core:Fragment fragmentName="fiori.gft.Gestion_Frais_de_Transports.fragments.Footer" type="XML"/>
+				</footer>
+				<customHeader>
+					<Bar>
+						<contentMiddle>
+							<Title text="{i18n>title}" id="titleMainView" titleStyle="H3" textAlign="Center" width="100%"/>
+						</contentMiddle>
+					</Bar>
+				</customHeader>
+				<content>
+					<Panel height="100%" width="100%">
+						<FlexBox width="100%" height="50%" id="box0" backgroundDesign="Translucent" alignContent="Center" alignItems="Center" direction="Column"
+							justifyContent="Center">
+							<items>
+								<Title text="{i18n>greenscore}" titleStyle="H1"/>
+								<si:StatusIndicator id="greenscore" value="{Greenscore>/Greenscore/Score}" size="Large" showLabel="true" labelPosition="Bottom">
+									<si:ShapeGroup>
+										<si:CustomShape id="cShape" fillingType="Linear"/>
+									</si:ShapeGroup>
+									<si:propertyThresholds>
+										<si:PropertyThreshold fillColor="Critical" toValue="60"/>
+										<si:PropertyThreshold fillColor="Error" toValue="30"/>
+										<si:PropertyThreshold fillColor="Good" toValue="100"/>
+									</si:propertyThresholds>
+								</si:StatusIndicator>
+							</items>
+						</FlexBox>
+						<FlexBox width="100%" height="30%" backgroundDesign="Translucent" alignContent="Center" alignItems="Center" direction="Column"
+							justifyContent="Center">
+							<Table xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+								noDataText="Vous n'avez pas définit votre trajet routinier. Cliquer &quot;Plan&quot; dans le footer pour encoder votre trajet quotidien au travail."
+								cd:w5g.dt.context="/RoutineSet" items="{path:'Routine>/RoutineSet'}" showNoData="true" id="tab" itemPress="onSelectionChangeRoutine">
+								<infoToolbar>
+									<OverflowToolbar>
+										<Label text="{i18n>aperçuRoutine}"/>
+									</OverflowToolbar>
+								</infoToolbar>
+								<items>
+									<ColumnListItem type="Active" id="item1" cd:w5g.dt.context="/RoutineSet">
+										<cells>
+											<Text text="{Routine>Nom}" id="trajetNom"/>
+											<Text text="{parts : [{path:'Routine>Etat'}],formatter: '.formatter.formatEtat'}" id="trajetEtat"/>
+										</cells>
+										<cells/>
+									</ColumnListItem>
+								</items>
+								<columns>
+									<Column>
+										<header>
+											<Label text="{i18n>nomTrajet}"/>
+										</header>
+									</Column>
+									<Column>
+										<header>
+											<Label text="{i18n>etatTrajet}"/>
+										</header>
+									</Column>
+								</columns>
+							</Table>
+						</FlexBox>
+						<FlexBox width="100%" height="30%" backgroundDesign="Translucent" alignContent="Center" alignItems="Center" direction="Column">
+							<Table xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" noDataText="" items="{path:'mainSous_Trajet>/'}"
+								showNoData="true">
+								<infoToolbar>
+									<OverflowToolbar>
+										<Label text="{i18n>aperçuRem}"/>
+										<DatePicker id="date" displayFormat="MM-y" change="onDateFilter"></DatePicker>
+									</OverflowToolbar>
+								</infoToolbar>
+								<items>
+									<ColumnListItem type="Active" id="item2">
+										<cells>
+											<Text text="{mainSous_Trajet>Nom}"/>
+											<Text text="{path : 'mainSous_Trajet>Begda',type : 'sap.ui.model.type.Date',formatOptions:{style:'medium'}}"/>
+											<Text text="{parts : [{path:'mainSous_Trajet>Etat'}],formatter: '.formatter.formatEtat'}"/>
+										</cells>
+										<cells/>
+									</ColumnListItem>
+								</items>
+								<columns>
+									<Column>
+										<header>
+											<Label text="{i18n>nomTrajet}"/>
+										</header>
+									</Column>
+									<Column>
+										<header>
+											<Label text="{i18n>dataEnregistrementTrajet}"/>
+										</header>
+									</Column>
+									<Column>
+										<header>
+											<Label text="{i18n>etatTrajet}"/>
+										</header>
+									</Column>
+							
+								</columns>
+							</Table>
+						</FlexBox>
+					</Panel>
+				</content>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

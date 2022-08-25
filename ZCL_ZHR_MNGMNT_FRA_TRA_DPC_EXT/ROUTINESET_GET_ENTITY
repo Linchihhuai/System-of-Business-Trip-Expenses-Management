@@ -1,0 +1,43 @@
+  method ROUTINESET_GET_ENTITY.
+
+    DATA lt_routine TYPE STANDARD TABLE OF zhr_routine.
+    DATA wa_routine LIKE LINE OF lt_routine.
+
+
+    DATA lt_keys      type /iwbep/t_mgw_tech_pairs.
+    DATA ls_key       type /iwbep/s_mgw_tech_pair.
+    DATA lv_ID TYPE zhr_routine-ID.
+
+    lt_keys = IO_TECH_REQUEST_CONTEXT->GET_KEYS( ).
+    READ TABLE lt_keys WITH KEY name = 'ID' INTO ls_key.
+    lv_ID = ls_key-value.
+
+  SELECT * FROM zhr_routine INTO CORRESPONDING FIELDS OF wa_routine  WHERE ID = lv_ID AND BEGDA <= sy-datum AND ENDDA > sy-datum.  ENDSELECT.
+
+    IF sy-subrc = 0.
+
+        er_entity-mandt = sy-mandt.
+        er_entity-pernr = wa_routine-pernr.
+        er_entity-id = wa_routine-id.
+        er_entity-nom = wa_routine-nom.
+        er_entity-begda = wa_routine-begda.
+        er_entity-endda = wa_routine-endda.
+        er_entity-distance_prevu = wa_routine-distance_prevu.
+        er_entity-distance_parcouru = wa_routine-distance_parcouru.
+        er_entity-temps_prevu = wa_routine-temps_prevu.
+        er_entity-temps_en_motion = wa_routine-temps_en_motion.
+        er_entity-remarque_admin = wa_routine-remarque_admin.
+        er_entity-remarque_user = wa_routine-remarque_user.
+        er_entity-nbr_routine_realisee = wa_routine-nbr_routine_realisee.
+        er_entity-montant_rembourse = wa_routine-montant_rembourse.
+        er_entity-etat = wa_routine-etat.
+        er_entity-raison_trajet = wa_routine-raison_trajet.
+        er_entity-mode_encodage = wa_routine-mode_encodage.
+
+    ELSE.
+        RAISE EXCEPTION TYPE /IWBEP/CX_MGW_BUSI_EXCEPTION
+        EXPORTING textid = /IWBEP/CX_MGW_BUSI_EXCEPTION=>business_error
+        message = 'User doesn’t exist.'.
+    ENDIF.
+
+  endmethod.

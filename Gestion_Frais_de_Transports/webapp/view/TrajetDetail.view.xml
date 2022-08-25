@@ -1,0 +1,80 @@
+<mvc:View xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:l="sap.ui.layout" controllerName="fiori.gft.Gestion_Frais_de_Transports.controller.TrajetDetail">
+	<App>
+		<pages>
+			<Page title="Details du trajet" id="detailPage">
+				<customHeader>
+					<Bar>
+						<contentLeft>
+							<Button press="onNavigateToMain" icon="sap-icon://home"/>
+						</contentLeft>
+						<contentRight>
+							<Button id="deleteButton" icon="sap-icon://delete" text="Delete" press="onDetailDelete"/>
+						</contentRight>
+					</Bar>
+				</customHeader>
+				<content>
+					<OverflowToolbar>
+						<Label text="Voici les détails de votre trajet."/>
+					</OverflowToolbar>
+					<Table noDataText="Oups il y a une erreur...Contactez vos consultants" id="tabTra" items="{path:'Trajet>/Trajet_SpecifiqueSet'}">
+						<items>
+							<ColumnListItem type="Active" id="colTra">
+								<cells/>
+								<Input value="{Trajet>Nom}" id="text2"/>
+								<Text text="{parts : [{path:'Trajet>RaisonTrajet'}],formatter: '.formatter.formatRaison'}" id="text4"/>
+							</ColumnListItem>
+						</items>
+						<columns>
+							<Column>
+								<header>
+									<Label text="{i18n>nomTrajet}"/>
+								</header>
+							</Column>
+							<Column>
+								<header>
+									<Label text="{i18n>raisonTrajet}"/>
+								</header>
+							</Column>
+						</columns>
+					</Table>
+					<OverflowToolbar>
+						<Label text="Les sous trajets associés au trajet principal"/>
+					</OverflowToolbar>
+					<Table noDataText="Drop column list items here and columns in the area above" id="tabST" items="{path:'Sous_Trajet>/Sous_TrajetSet'}" xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" cd:w5g.dt.context="/Sous_TrajetSet" 
+					itemPress="onShowDetails">
+						<items>
+							<ColumnListItem type="Active">
+								<cells/>
+								<Input value="{Sous_Trajet>Depart}" width="100%" />
+								<Input value="{Sous_Trajet>Destination}" width="100%"/>
+							</ColumnListItem>
+						</items>
+						<columns>
+							<Column>
+								<header>
+									<Label text="{i18n>depart}"/>
+								</header>
+							</Column>
+							<Column>
+								<header>
+									<Label text="{i18n>destination}"/>
+								</header>
+							</Column>
+
+						</columns>
+					</Table>
+					<OverflowToolbar>
+						<Label text="Vos remarques"/>
+					</OverflowToolbar>
+					<TextArea growingMaxLines="5" width="100%" id="remarque" placeholder="Entrez vos remarques ici avant d'envoyer ce trajet pour le remboursement."/>
+					<FlexBox alignItems="Start" justifyContent="Center">
+						<Button id="btn" text="Soumettre" press="submit"/>
+					</FlexBox>
+				</content>
+				<footer>
+					<core:Fragment id="substDetail" fragmentName="fiori.gft.Gestion_Frais_de_Transports.fragments.Footer" type="XML"/>
+				</footer>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

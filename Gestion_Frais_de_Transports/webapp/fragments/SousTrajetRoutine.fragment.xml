@@ -1,0 +1,26 @@
+<core:FragmentDefinition xmlns:m="sap.m" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<Toolbar ariaLabelledBy="Title" id="barRou">
+		<Title text="Parcours"/>
+		<ToolbarSpacer/>
+	</Toolbar>
+	<!--
+	<Label text="Distance"></Label>
+	<Input id="distanceRou" width="100%" fieldWidth="100%" value="0" liveChange="valueCheck" valueLiveUpdate="true"  required="true" ></Input>
+	<Label text="Frais"></Label>
+	<Input id="fraisRou" width="100%" fieldWidth="100%" value="0" liveChange="valueCheck" valueLiveUpdate="true"  required="true"></Input>
+	-->
+	<Label id="labelTransRou" text="Moyen de Transport"></Label>
+	<ComboBox width="100%" id="transportRou" required="true" change="typeChangeDyn">
+		<items>
+			<core:Item key="VOI" text="Voiture"/>
+			<core:Item key="COV" text="Co-voiturage"/>
+			<core:Item text="Metro" id="met" key="MET"/>
+			<core:Item text="Bus" key="BUS"/>
+			<core:Item text="Train" key="TRN"/>
+			<core:Item text="Tram" key="TRM"/>
+			<core:Item text="A pied" key="PIE"/>
+			<core:Item text="Vélo" key="VEL"/>
+		</items>
+	</ComboBox>
+</core:FragmentDefinition>

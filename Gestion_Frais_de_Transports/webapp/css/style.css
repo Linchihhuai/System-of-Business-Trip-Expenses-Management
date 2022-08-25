@@ -1,0 +1,12 @@
+/* Enter your custom styles here */
+.sapMBtnInner.sapMBtnHoverable.sapMFocusable.sapMBtnText.sapMBtnIconFirst.sapMBtnDefault {
+	display: grid;
+    align-items: center;
+    justify-items: center;
+    position:relative;
+    bottom:0.5rem;
+}
+
+.sapUiIcon.sapUiIconMirrorInRTL.sapMBtnCustomIcon.sapMBtnIcon.sapMBtnIconLeft{
+	padding-bottom: 0.5rem;
+}

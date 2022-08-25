@@ -1,0 +1,52 @@
+  method ROUTINESET_UPDATE_ENTITY.
+
+
+  DATA return TYPE STANDARD TABLE OF bapireturn1.
+  DATA ls_return LIKE LINE OF return.
+  DATA lt_routine TYPE STANDARD TABLE OF zhr_routine.
+  DATA wa_routine LIKE LINE OF lt_routine.
+
+
+  DATA lt_keys      type /iwbep/t_mgw_tech_pairs.
+  DATA ls_key       type /iwbep/s_mgw_tech_pair.
+  DATA lv_ID TYPE zhr_routine-ID.
+  DATA lv_pernr type zhr_routine-pernr.
+
+  lt_keys = IO_TECH_REQUEST_CONTEXT->GET_KEYS( ).
+  READ TABLE lt_keys WITH KEY name = 'ID' INTO ls_key.
+  lv_ID = ls_key-value.
+  READ TABLE lt_keys WITH KEY name = 'PERNR' INTO ls_key.
+  lv_pernr = ls_key-value.
+
+  io_data_provider->read_entry_data( IMPORTING es_data = er_entity ).
+
+*   modifiable seulement si le trajet n'a pas été réalisé
+  wa_routine-pernr = lv_pernr.
+  wa_routine-ID = lv_ID.
+  wa_routine-nom = er_entity-nom.
+  wa_routine-begda = er_entity-begda.
+  wa_routine-endda = er_entity-endda.
+  wa_routine-distance_prevu = er_entity-distance_prevu.
+  wa_routine-distance_parcouru = er_entity-distance_parcouru.
+  wa_routine-temps_prevu = er_entity-temps_prevu.
+  wa_routine-temps_en_motion = er_entity-temps_en_motion.
+  wa_routine-remarque_admin = er_entity-remarque_admin.
+  wa_routine-remarque_user = er_entity-remarque_user.
+  wa_routine-nbr_routine_realisee = er_entity-nbr_routine_realisee.
+  wa_routine-raison_trajet = er_entity-raison_trajet.
+  wa_routine-montant_rembourse = er_entity-montant_rembourse.
+  wa_routine-etat = er_entity-etat.
+  wa_routine-raison_trajet = er_entity-raison_trajet.
+  wa_routine-mode_encodage = er_entity-mode_encodage.
+
+  APPEND wa_routine TO lt_routine.
+
+    MODIFY zhr_routine from TABLE lt_routine.
+
+     IF sy-subrc <> 0.
+        RAISE EXCEPTION TYPE /IWBEP/CX_MGW_BUSI_EXCEPTION
+        EXPORTING textid = /IWBEP/CX_MGW_BUSI_EXCEPTION=>business_error
+        message = ls_return-message.
+     ENDIF.
+
+  endmethod.

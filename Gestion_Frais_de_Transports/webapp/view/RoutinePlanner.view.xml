@@ -1,0 +1,51 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:m="sap.m" xmlns:f="sap.ui.layout.form"
+	xmlns:html="http://www.w3.org/1999/xhtml" controllerName="fiori.gft.Gestion_Frais_de_Transports.controller.RoutinePlanner">
+	<App>
+		<pages>
+			<Page title="{18n>title}">
+				<customHeader>
+					<Bar>
+						<contentLeft>
+							<Button press="onNavigateToMain" icon="sap-icon://home"/>
+						</contentLeft>
+						<contentRight>
+							<Button press="onDeleteForm" icon="sap-icon://less"/>
+							<Button press="onAddForm" icon="sap-icon://add"/>
+						</contentRight>
+					</Bar>
+				</customHeader>
+				<content>
+					<VBox id="vBox" width="100%">
+						<f:SimpleForm title="Encoder votre trajet routinier" id="form" editable="true" layout="ResponsiveGridLayout" singleContainerFullSize="false">
+							<Toolbar ariaLabelledBy="Title2">
+								<Title text="Parcours"/>
+								<ToolbarSpacer/>
+							</Toolbar>
+							<Label text="{i18n>depart}"/>
+							<Input id="depart" width="100%" fieldWidth="100%" value="{SousTrajet>/SousTrajet/Depart}" editable="false"/>
+							<Label text="{i18n>destination}"  />
+							<Input id="destination" width="100%" fieldWidth="100%" value="{SousTrajet>/SousTrajet/Destination}" editable="false"/>
+							<Label text="{i18n>transport}"/>
+							<ComboBox id="transport" width="100%" change="typeChange" selectedKey="{SousTrajet>/SousTrajet/Transport}" required ="true">
+								<items>
+									<core:Item key="VOI" text="Voiture" id="voi"/>
+									<core:Item key="COV" text="Co-voiturage" id="cov"/>
+									<core:Item text="Metro" id="met" key="MET"/>
+									<core:Item text="Train" id="tra" key="TRN"/>
+									<core:Item text="Bus" id="bus" key="BUS"/>
+									<core:Item text="Tram" id="trm" key="TRM"/>
+									<core:Item text="A pied" id="pie" key="PIE"/>
+									<core:Item text="Vélo" id="vel" key="VEL"/>
+								</items>
+							</ComboBox>
+							<Button id="button" text="{i18n>soumettre}" press="onSavePressed"/>
+						</f:SimpleForm>
+					</VBox>
+				</content>
+				<footer>
+					<core:Fragment id="substDetail" fragmentName="fiori.gft.Gestion_Frais_de_Transports.fragments.Footer" type="XML"/>
+				</footer>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

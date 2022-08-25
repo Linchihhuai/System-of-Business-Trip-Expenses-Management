@@ -1,0 +1,11 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:html="http://www.w3.org/1999/xhtml"
+	controllerName="fiori.gft.Gestion_Frais_de_Transports.controller.MainView">
+	<Toolbar width="100%" id="toolbar1">
+		<content>
+			<Button xmlns="sap.m" icon="sap-icon://record" text="Record" id="btnRe" press="onNavigateToRecord"/>
+			<Button xmlns="sap.m" icon="sap-icon://appointment" text="Plan" id="btnPl" press="onNavigateToPlanner"/>
+			<Button xmlns="sap.m" icon="sap-icon://legend" text="Trajets" id="btnTr" press="onNavigateToTrajets"/>
+			<Button xmlns="sap.m" icon="sap-icon://e-care" text="Greenscore" id="btnGr" press="onNavigateToGscore"/>
+		</content>
+	</Toolbar>
+</core:FragmentDefinition>

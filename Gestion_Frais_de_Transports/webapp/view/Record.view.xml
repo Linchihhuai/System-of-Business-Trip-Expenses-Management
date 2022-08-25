@@ -1,0 +1,79 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:f="sap.ui.layout.form"
+	controllerName="fiori.gft.Gestion_Frais_de_Transports.controller.Record" xmlns:html="http://www.w3.org/1999/xhtml">
+	<App>
+		<pages>
+			<Page title="Title">
+				<customHeader>
+					<Bar>
+						<contentLeft>
+							<Button press="onNavigateToMain" icon="sap-icon://home"/>
+						</contentLeft>
+						<contentMiddle>
+							<Label text="Distance: " textAlign="Center"></Label>
+							<Text id="distance" text="0" textAlign="Center"></Text>
+							<Label text=" km" textAlign="Center"></Label>
+						</contentMiddle>
+						<contentRight>
+							<Button press="onRecenter" text="Re-centrer"/>
+						</contentRight>
+					</Bar>
+				</customHeader>
+				<footer>
+					<core:Fragment fragmentName="fiori.gft.Gestion_Frais_de_Transports.fragments.Footer" type="XML"/>
+				</footer>
+				<content>
+					<vbm:GeoMap id="map" xmlns:mvc="sap.ui.core.mvc" xmlns:vbm="sap.ui.vbm" xmlns="sap.m" zoomlevel="14" width="100%" height="70%"
+						enableAnimation="true">
+						<vbm:vos>
+							<vbm:Spots click="onClickItem" posChangeable="true" scaleChangeable="false" contextMenu="onContextMenuItem">
+								<vbm:items>
+									<vbm:Spot id="Spot" contextMenu="onContextMenuSpot"></vbm:Spot>
+								</vbm:items>
+							</vbm:Spots>
+							<vbm:Areas id="Areas">
+								<vbm:items>
+									<vbm:Area id="Area" contextMenu="onContextMenuSpot"></vbm:Area>
+								</vbm:items>
+							</vbm:Areas>
+							<vbm:Routes >
+								<vbm:items>
+									<vbm:Route id="route" color="rgb(92, 186, 230)" start="0" end="1"></vbm:Route>
+								</vbm:items>
+							</vbm:Routes>
+						</vbm:vos>
+						<vbm:clusters>
+							<vbm:ClusterTree id="clusterTree" textProperty="text" areaAlwaysVisible="false" areaColor="rgba(255,255,255,0)"
+								areaColorBorder="rgba(255,255,255,0)">
+								<vbm:vizTemplate>
+									<vbm:Cluster id="vizTemplate" type="Warning" icon="sap-icon://wrench"/>
+								</vbm:vizTemplate>
+							</vbm:ClusterTree>
+						</vbm:clusters>
+					</vbm:GeoMap>
+					<VBox justifyContent="Center">
+						<f:SimpleForm>
+							<Label text="{i18n>transport}" labelFor="transport"></Label>
+							<ComboBox id="transport" width="100%" selectedKey="VEL" required="true">
+								<items>
+									<core:Item text="A pied" id="pie" key="PIE"/>
+									<core:Item text="Vélo" id="vel" key="VEL"/>
+								</items>
+							</ComboBox>
+							<Label text="{i18n>raisonTrajet}"/>
+							<ComboBox id="raisonTrajet" selectedKey="TRA" required="true">
+								<items>
+									<core:Item xmlns:core="sap.ui.core" key="FOR" text="Formation" id="FOR"/>
+									<core:Item xmlns:core="sap.ui.core" key="TRA" text="Travail" id="TRA"/>
+									<core:Item xmlns:core="sap.ui.core" key="REU" text="Réunion Client" id="REU"/>
+								</items>
+							</ComboBox>
+						</f:SimpleForm>
+					</VBox>
+					<FlexBox justifyContent="Center">
+						<Button icon="sap-icon://record" id="recordBtn" type="Reject" press="onStartRecording"></Button>
+					</FlexBox>
+				</content>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

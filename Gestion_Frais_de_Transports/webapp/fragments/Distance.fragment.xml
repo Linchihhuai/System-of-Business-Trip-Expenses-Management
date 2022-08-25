@@ -1,0 +1,5 @@
+<core:FragmentDefinition xmlns:m="sap.m" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<Label text="Distance"></Label>
+	<Input  id="distanceRou" width="100%" fieldWidth="100%" value="0" liveChange="valueCheck" valueLiveUpdate="true"  required="true"></Input>
+</core:FragmentDefinition>

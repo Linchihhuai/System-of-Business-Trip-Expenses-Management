@@ -1,0 +1,53 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:html="http://www.w3.org/1999/xhtml"
+	controllerName="fiori.gft.Gestion_Frais_de_Transports.controller.Trajet">
+	<App>
+		<pages>
+			<Page title="{i18n>title}">
+				<content>
+					<Bar>
+						<contentLeft>
+							<Button press="onNavigateToMain" icon="sap-icon://home"></Button>
+						</contentLeft>
+					</Bar>
+					<OverflowToolbar>
+						<Label text="{i18n>aperçuTrajet}"/>
+					</OverflowToolbar>
+					<Table xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" itemPress='onSelectionChange'
+						noDataText="Vous n'avez pas encore encodé des trajets spécifiques!" id="tabTra" cd:w5g.dt.context="/Trajet_SpecifiqueSet"
+						items="{path:'Trajet>/Trajet_SpecifiqueSet'}" showNoData="true">
+						<items>
+							<ColumnListItem type="Active" id="item1" cd:w5g.dt.context="/Trajet_SpecifiqueSet">
+								<cells>
+									<Text text="{Trajet>Nom}" id="trajetNom"/>
+									<Text text="{path : 'Trajet>Begda',type : 'sap.ui.model.type.Date',formatOptions:{style:'medium'}}" id="trajetBegda"/>
+									<Text text="{parts : [{path:'Trajet>Etat'}],formatter: '.formatter.formatEtat'}" id="trajetEtat"/>
+								</cells>
+								<cells/>
+							</ColumnListItem>
+						</items>
+						<columns>
+							<Column>
+								<header>
+									<Label text="{i18n>nomTrajet}"/>
+								</header>
+							</Column>
+							<Column>
+								<header>
+									<Label text="{i18n>dataEnregistrementTrajet}"/>
+								</header>
+							</Column>
+							<Column>
+								<header>
+									<Label text="{i18n>etatTrajet}"/>
+								</header>
+							</Column>
+						</columns>
+					</Table>
+				</content>
+				<footer>
+					<core:Fragment id="substDetail" fragmentName="fiori.gft.Gestion_Frais_de_Transports.fragments.Footer" type="XML"/>
+				</footer>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

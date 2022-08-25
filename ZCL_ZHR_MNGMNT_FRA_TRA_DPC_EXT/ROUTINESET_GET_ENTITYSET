@@ -1,0 +1,50 @@
+  method ROUTINESET_GET_ENTITYSET.
+
+    DATA lt_routine TYPE STANDARD TABLE OF zhr_routine.
+    DATA wa_routine LIKE LINE OF lt_routine.
+    DATA es_entity LIKE LINE OF et_entityset. "for displaying information in xlm form
+
+    DATA lv_Id  TYPE zhr_sous_trajet-Fk_Trajet.
+
+    io_tech_request_context->get_filter( )->get_filter_select_options( ).
+    lv_Id = io_tech_request_context->get_filter( )->get_filter_string( ).
+
+  IF lv_Id IS INITIAL.
+    SELECT * FROM zhr_routine  INTO TABLE lt_routine WHERE  BEGDA <= sy-datum AND ENDDA > sy-datum.
+  ELSE.
+    SELECT * FROM zhr_routine INTO TABLE lt_routine WHERE Id = lv_Id AND BEGDA <= sy-datum AND ENDDA > sy-datum.
+  ENDIF.
+
+  LOOP AT lt_routine INTO wa_routine.
+    clear es_entity.
+    IF sy-subrc = 0.
+
+        es_entity-mandt = sy-mandt.
+        es_entity-pernr = wa_routine-pernr.
+        es_entity-id = wa_routine-id.
+        es_entity-nom = wa_routine-nom.
+        es_entity-begda = wa_routine-begda.
+        es_entity-endda = wa_routine-endda.
+        es_entity-distance_prevu = wa_routine-distance_prevu.
+        es_entity-distance_parcouru = wa_routine-distance_parcouru.
+        es_entity-temps_prevu = wa_routine-temps_prevu.
+        es_entity-temps_en_motion = wa_routine-temps_en_motion.
+        es_entity-remarque_admin = wa_routine-remarque_admin.
+        es_entity-remarque_user = wa_routine-remarque_user.
+        es_entity-nbr_routine_realisee = wa_routine-nbr_routine_realisee.
+        es_entity-montant_rembourse = wa_routine-montant_rembourse.
+        es_entity-etat = wa_routine-etat.
+        es_entity-raison_trajet = wa_routine-raison_trajet.
+        es_entity-mode_encodage = wa_routine-mode_encodage.
+
+
+        APPEND es_entity TO et_entityset.
+    ELSE.
+        RAISE EXCEPTION TYPE /IWBEP/CX_MGW_BUSI_EXCEPTION
+        EXPORTING textid = /IWBEP/CX_MGW_BUSI_EXCEPTION=>business_error
+        message = 'User doesn’t exist.'.
+    ENDIF.
+
+  ENDLOOP.
+
+  endmethod.
