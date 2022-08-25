@@ -1,5 +1,5 @@
 ### Systeme-de-gestion-des-frais-de-transport
-My personal internship project at Haute Ecole Leonard de Vinci, Institut Paul Lambin and at the Belgian company Persolis located in Wallonia, Belgium. The name of the project means system of transport fee management in English. The project is originally named in French which is the company's professional language. It's a SAP project. The frontend is developped in SAPUI5 and the backend with Persolis' SAP system. The app helps company employees to record their commute to work and transmiss relavant commute data to the HR for remboursement. 
+My personal internship project at Haute Ecole Leonard de Vinci, Institut Paul Lambin and at the Belgian company Persolis located in Wallonia, Belgium. The name of the project means "System of Transport Fee Management" in English. The project is originally named in French which is the company's professional language. It's a SAP project. The frontend is developped in SAPUI5 and the backend with Persolis' SAP system. The app aims to helps company employees to record their commute to work and transmiss relavant commute data to the HR for remboursement. With that said, it is not a general purpose app. 
 
 ### Table of Content
 1. [Technology](#Technology)
