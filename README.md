@@ -3,8 +3,8 @@ My personal internship project at Haute Ecole Leonard de Vinci, Institut Paul La
 
 ### Table of Content
 1. [Technology](#Technology)
-2. [Deployment and launch](#Deployment and launch)
-3. [Using Systeme de gestion des frais de transport](#Using Systeme de gestion des frais de transport)
+2. [Deployment and launch](#Deployment-and-launch)
+3. [Using Systeme de gestion des frais de transport](#Using-Systeme-de-gestion-des-frais-de-transport)
 
 ### Technology
 The main technology used for the project is SAP, a human ressource solution developped by a German company with the same name. SAP provides a wide range of modules for building web and mobile applications. There are the SAP modules used in my project: 
@@ -20,8 +20,10 @@ One of the sub modules of the Human Capital Management of the SAP ERP (Enterpris
 4. SAP HR Organizational Management.
 
 ### Deployment and launch
+TO BE ADDED
 
 ### Using Systeme de gestion des frais de transport
+TO BE ADDED
 
 
 
