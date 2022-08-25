@@ -1,3 +1,4 @@
+<<<<<<< HEAD
   method TRAJET_SPECIFIQU_GET_ENTITY.
 
     DATA lt_trajet TYPE STANDARD TABLE OF zhr_trajet.
@@ -39,3 +40,46 @@
     ENDIF.
 
   endmethod.
+=======
+  method TRAJET_SPECIFIQU_GET_ENTITY.
+
+    DATA lt_trajet TYPE STANDARD TABLE OF zhr_trajet.
+    DATA wa_trajet LIKE LINE OF lt_trajet.
+
+    DATA lt_keys      type /iwbep/t_mgw_tech_pairs.
+    DATA ls_key       type /iwbep/s_mgw_tech_pair.
+    DATA lv_ID TYPE zhr_trajet-ID.
+
+    lt_keys = IO_TECH_REQUEST_CONTEXT->GET_KEYS( ).
+    READ TABLE lt_keys WITH KEY name = 'ID' INTO ls_key.
+    lv_ID = ls_key-value.
+
+  SELECT * FROM zhr_trajet INTO CORRESPONDING FIELDS OF wa_trajet  WHERE ID = lv_ID AND  ENDDA > sy-datum. ENDSELECT.
+
+    IF sy-subrc = 0.
+
+        er_entity-mandt = sy-mandt.
+        er_entity-pernr = wa_trajet-pernr.
+        er_entity-id = wa_trajet-id.
+        er_entity-nom = wa_trajet-nom.
+        er_entity-begda = wa_trajet-begda.
+        er_entity-endda = wa_trajet-endda.
+        er_entity-distance_prevu = wa_trajet-distance_prevu.
+        er_entity-distance_parcouru = wa_trajet-distance_parcouru.
+        er_entity-temps_prevu = wa_trajet-temps_prevu.
+        er_entity-temps_en_motion = wa_trajet-temps_en_motion.
+        er_entity-remarque_admin = wa_trajet-remarque_admin.
+        er_entity-remarque_user = wa_trajet-remarque_user.
+        er_entity-montant_rembourse = wa_trajet-montant_rembourse.
+        er_entity-etat = wa_trajet-etat.
+        er_entity-raison_trajet = wa_trajet-raison_trajet.
+        er_entity-mode_encodage = wa_trajet-mode_encodage.
+
+    ELSE.
+        RAISE EXCEPTION TYPE /IWBEP/CX_MGW_BUSI_EXCEPTION
+        EXPORTING textid = /IWBEP/CX_MGW_BUSI_EXCEPTION=>business_error
+        message = 'User doesn’t exist.'.
+    ENDIF.
+
+  endmethod.
+>>>>>>> main/main

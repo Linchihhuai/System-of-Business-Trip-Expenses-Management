@@ -1,3 +1,4 @@
+<<<<<<< HEAD
   method TRAJET_SPECIFIQU_UPDATE_ENTITY.
 
   DATA return TYPE STANDARD TABLE OF bapireturn1.
@@ -47,3 +48,54 @@
      ENDIF.
 
   endmethod.
+=======
+  method TRAJET_SPECIFIQU_UPDATE_ENTITY.
+
+  DATA return TYPE STANDARD TABLE OF bapireturn1.
+  DATA ls_return LIKE LINE OF return.
+  DATA lt_trajet TYPE STANDARD TABLE OF zhr_trajet.
+  DATA wa_trajet LIKE LINE OF lt_trajet.
+
+  DATA lt_keys      type /iwbep/t_mgw_tech_pairs.
+  DATA ls_key       type /iwbep/s_mgw_tech_pair.
+  DATA lv_ID TYPE zhr_trajet-ID.
+  DATA lv_pernr type zhr_trajet-pernr.
+
+  lt_keys = IO_TECH_REQUEST_CONTEXT->GET_KEYS( ).
+  READ TABLE lt_keys WITH KEY name = 'ID' INTO ls_key.
+  lv_ID = ls_key-value.
+  READ TABLE lt_keys WITH KEY name = 'PERNR' INTO ls_key.
+  lv_pernr = ls_key-value.
+
+  io_data_provider->read_entry_data( IMPORTING es_data = er_entity ).
+
+*   modifiable seulement si le trajet n'a pas été réalisé
+  wa_trajet-pernr = lv_pernr.
+  wa_trajet-ID = lv_ID.
+  wa_trajet-nom = er_entity-nom.
+  wa_trajet-begda = er_entity-begda.
+  wa_trajet-endda = er_entity-endda.
+  wa_trajet-distance_prevu = er_entity-distance_prevu.
+  wa_trajet-distance_parcouru = er_entity-distance_parcouru.
+  wa_trajet-temps_prevu = er_entity-temps_prevu.
+  wa_trajet-temps_en_motion = er_entity-temps_en_motion.
+  wa_trajet-remarque_admin = er_entity-remarque_admin.
+  wa_trajet-remarque_user = er_entity-remarque_user.
+  wa_trajet-raison_trajet = er_entity-raison_trajet.
+  wa_trajet-montant_rembourse = er_entity-montant_rembourse.
+  wa_trajet-etat = er_entity-etat.
+  wa_trajet-raison_trajet = er_entity-raison_trajet.
+  wa_trajet-mode_encodage = er_entity-mode_encodage.
+
+  APPEND wa_trajet TO lt_trajet.
+
+    MODIFY zhr_trajet from TABLE lt_trajet.
+
+     IF sy-subrc <> 0.
+        RAISE EXCEPTION TYPE /IWBEP/CX_MGW_BUSI_EXCEPTION
+        EXPORTING textid = /IWBEP/CX_MGW_BUSI_EXCEPTION=>business_error
+        message = ls_return-message.
+     ENDIF.
+
+  endmethod.
+>>>>>>> main/main

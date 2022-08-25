@@ -1,3 +1,4 @@
+<<<<<<< HEAD
   method TRAJET_SPECIFIQU_CREATE_ENTITY.
 
     DATA lt_trajet TYPE STANDARD TABLE OF zhr_trajet.
@@ -53,3 +54,60 @@
 
 
   endmethod.
+=======
+  method TRAJET_SPECIFIQU_CREATE_ENTITY.
+
+    DATA lt_trajet TYPE STANDARD TABLE OF zhr_trajet.
+    DATA wa_trajet LIKE LINE OF lt_trajet.
+
+    DATA return TYPE STANDARD TABLE OF bapireturn1.
+    DATA ls_return LIKE LINE OF return.
+
+    DATA lv_Pernr TYPE zhr_trajet-pernr.
+    select single pernr  INTO lv_Pernr from pa0105 where USRID = sy-uname  AND subty = '0001' AND BEGDA <= sy-datum AND ENDDA > sy-datum.
+
+     DATA idTrajet TYPE i.
+     DATA idST TYPE i.
+        call function 'QF05_RANDOM_INTEGER'
+          exporting
+            RAN_INT_MAX   = 99999999              " Greatest required value
+            RAN_INT_MIN   = 1                " Smallest required value
+          importing
+            RAN_INT       =  idTrajet                " Random number
+*          exceptions
+*            INVALID_INPUT = 1                " RAN_INT_MIN > RAN_INT_MAX
+*            OTHERS        = 2
+    .
+
+    io_data_provider->read_entry_data( IMPORTING es_data = er_entity ).
+
+        wa_trajet-pernr = lv_Pernr.
+        wa_trajet-id = idTrajet.
+        wa_trajet-nom = er_entity-nom.
+        wa_trajet-begda = er_entity-begda.
+        wa_trajet-endda = er_entity-endda.
+        wa_trajet-distance_prevu = er_entity-distance_prevu.
+        wa_trajet-distance_parcouru = er_entity-distance_parcouru.
+        wa_trajet-temps_prevu = er_entity-temps_prevu.
+        wa_trajet-temps_en_motion = er_entity-temps_en_motion.
+        wa_trajet-remarque_admin = er_entity-remarque_admin.
+        wa_trajet-remarque_user = er_entity-remarque_user.
+        wa_trajet-montant_rembourse =  er_entity-montant_rembourse.
+        wa_trajet-etat = er_entity-etat.
+        wa_trajet-raison_trajet = er_entity-raison_trajet.
+        wa_trajet-mode_encodage = er_entity-mode_encodage.
+
+        er_entity-ID = idTrajet.
+
+
+    INSERT INTO zhr_trajet VALUES wa_trajet.
+
+    IF sy-subrc <> 0.
+        RAISE EXCEPTION TYPE /IWBEP/CX_MGW_BUSI_EXCEPTION
+        EXPORTING textid = /IWBEP/CX_MGW_BUSI_EXCEPTION=>business_error
+        message = ls_return-message.
+     ENDIF.
+
+
+  endmethod.
+>>>>>>> main/main

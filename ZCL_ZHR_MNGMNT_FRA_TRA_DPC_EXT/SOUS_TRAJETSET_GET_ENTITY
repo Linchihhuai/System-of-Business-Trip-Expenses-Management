@@ -1,3 +1,4 @@
+<<<<<<< HEAD
   method SOUS_TRAJETSET_GET_ENTITY.
 
     DATA lt_sous_trajet TYPE STANDARD TABLE OF zhr_sous_trajet.
@@ -41,3 +42,48 @@
           message = 'Sous Trajet does not exist.'.
     ENDIF.
   endmethod.
+=======
+  method SOUS_TRAJETSET_GET_ENTITY.
+
+    DATA lt_sous_trajet TYPE STANDARD TABLE OF zhr_sous_trajet.
+    DATA wa_sous_trajet LIKE LINE OF lt_sous_trajet.
+
+    DATA lt_keys      type /iwbep/t_mgw_tech_pairs.
+    DATA ls_key       type /iwbep/s_mgw_tech_pair.
+    DATA lv_ID TYPE zhr_greenscore-pernr.
+
+    lt_keys = IO_TECH_REQUEST_CONTEXT->GET_KEYS( ).
+    READ TABLE lt_keys WITH KEY name = 'ID' INTO ls_key.
+    lv_ID = ls_key-value.
+
+    SELECT * FROM zhr_sous_trajet  INTO CORRESPONDING FIELDS OF wa_sous_trajet WHERE ID = lv_ID  AND ENDDA > sy-datum. ENDSELECT.
+
+    IF sy-subrc = 0.
+
+      er_entity-mandt = sy-mandt.
+      er_entity-ID = wa_sous_trajet-ID.
+      er_entity-nom =  wa_sous_trajet-nom.
+      er_entity-begda =  wa_sous_trajet-begda.
+      er_entity-endda =  wa_sous_trajet-endda.
+      er_entity-transport = wa_sous_trajet-transport.
+      er_entity-distance_prevu = wa_sous_trajet-distance_prevu.
+      er_entity-distance_parcouru = wa_sous_trajet-distance_parcouru.
+      er_entity-temps_prevu = wa_sous_trajet-temps_prevu.
+      er_entity-temps_en_motion = wa_sous_trajet-temps_en_motion.
+      er_entity-transport = wa_sous_trajet-transport.
+      er_entity-frais = wa_sous_trajet-frais.
+      er_entity-etat = wa_sous_trajet-etat.
+      er_entity-frais = wa_sous_trajet-montant_rembourse.
+      er_entity-depart =  wa_sous_trajet-depart.
+      er_entity-destination =  wa_sous_trajet-destination.
+
+      er_entity-FK_Trajet =  wa_sous_trajet-FK_Trajet.
+      er_entity-FK_Routine =  wa_sous_trajet-FK_Routine.
+
+      ELSE.
+          RAISE EXCEPTION TYPE /IWBEP/CX_MGW_BUSI_EXCEPTION
+          EXPORTING textid = /IWBEP/CX_MGW_BUSI_EXCEPTION=>business_error
+          message = 'Sous Trajet does not exist.'.
+    ENDIF.
+  endmethod.
+>>>>>>> main/main

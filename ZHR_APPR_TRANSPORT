@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *&---------------------------------------------------------------------*
 *& Report ZHR_APPR_TRANSPORT
 *&---------------------------------------------------------------------*
@@ -388,3 +389,395 @@ CLASS GREENSCORE_UPDATE IMPLEMENTATION.
     UPDATE zhr_greenscore FROM wa_greenscore.
   ENDMETHOD.
 ENDCLASS.
+=======
+*&---------------------------------------------------------------------*
+*& Report ZHR_APPR_TRANSPORT
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZHR_APPR_TRANSPORT.
+
+
+
+DATA lt_routine TYPE STANDARD TABLE OF zhr_routine.
+DATA lt_trajet_spe TYPE STANDARD TABLE OF zhr_trajet.
+DATA lt_sous_trajet TYPE STANDARD TABLE OF zhr_sous_trajet.
+DATA display_sous_trajet TYPE STANDARD TABLE OF zhr_sous_trajet.
+
+DATA wa_sous_trajet LIKE LINE OF lt_sous_trajet.
+DATA wa_routine LIKE LINE OF lt_routine.
+DATA wa_trajet_spe LIKE LINE OF lt_trajet_spe.
+
+DATA etat_sous type zhr_routine-etat.
+DATA etat_app type zhr_routine-etat.
+DATA etat_rem type zhr_routine-etat.
+DATA etat_rej type zhr_routine-etat.
+
+DATA: salv_table_ST TYPE REF TO cl_salv_table.
+DATA: salv_columns TYPE REF TO cl_salv_columns.
+DATA: salv_column TYPE REF TO  cl_salv_column_list.
+data: lo_selections type ref to cl_salv_selections.
+data lt_rows type salv_t_row.
+data ls_row type i.
+
+DATA: lo_event   TYPE REF TO cl_salv_events_table.
+
+
+DATA answer type c.
+
+*----------------Define click class---------------------
+CLASS CL_CLICK DEFINITION.
+  PUBLIC SECTION.
+    METHODS : ON_CLICK
+                 FOR EVENT IF_SALV_EVENTS_FUNCTIONS~ADDED_FUNCTION
+                         OF CL_SALV_EVENTS_TABLE
+                            IMPORTING E_SALV_FUNCTION.
+
+ENDCLASS.
+
+CLASS APPR DEFINITION.
+  PUBLIC SECTION.
+  METHODS : BUILD_FORM.
+ENDCLASS.
+
+CLASS GREENSCORE_UPDATE DEFINITION.
+  PUBLIC SECTION.
+  METHODS : UPDATE.
+ENDCLASS.
+
+
+DATA : LO_CLICK TYPE REF TO CL_CLICK.
+DATA: LO_APPR TYPE REF TO APPR.
+DATA: lo_greenscore_update TYPE REF TO GREENSCORE_UPDATE.
+
+INFOTYPES: 0001.
+TABLES: pernr.
+START-OF-SELECTION.
+
+SELECTION-SCREEN BEGIN OF BLOCK bloc1 WITH FRAME TITLE Text-bl1.
+  SELECTION-SCREEN BEGIN OF LINE.
+  SELECTION-SCREEN COMMENT 1(31) TEXT-S01 FOR FIELD pend.
+  PARAMETERS : pend AS CHECKBOX.
+  SELECTION-SCREEN END OF LINE.
+
+  SELECTION-SCREEN BEGIN OF LINE.
+  SELECTION-SCREEN COMMENT 1(31) TEXT-S02 FOR FIELD appr.
+  PARAMETER: appr AS CHECKBOX.
+  SELECTION-SCREEN END OF LINE.
+
+  SELECTION-SCREEN BEGIN OF LINE.
+  SELECTION-SCREEN COMMENT 1(31) TEXT-S03 FOR FIELD rem.
+  PARAMETERS : rem AS CHECKBOX.
+  SELECTION-SCREEN END OF LINE.
+
+  SELECTION-SCREEN BEGIN OF LINE.
+  SELECTION-SCREEN COMMENT 1(31) TEXT-S04 FOR FIELD rej.
+  PARAMETER: rej AS CHECKBOX.
+  SELECTION-SCREEN END OF LINE.
+
+
+SELECTION-SCREEN END OF BLOCK bloc1.
+GET PERNR.
+
+CREATE OBJECT LO_APPR.
+CREATE OBJECT LO_GREENSCORE_UPDATE.
+
+
+IF pend ='X'.
+  etat_sous = 'SOU'.
+ENDIF.
+
+ IF appr ='X'.
+    etat_app = 'APP'.
+ ENDIF.
+
+ IF rem = 'X'.
+    etat_rem = 'REM'.
+ ENDIF.
+
+IF rej ='X'.
+  etat_rej = 'REJ'.
+ENDIF.
+
+    SELECT * FROM zhr_sous_trajet INTO TABLE lt_sous_trajet WHERE begda >= pn-begda AND ETAT <> 'SUP'
+        AND ( ETAT eq etat_sous OR ETAT eq etat_app OR ETAT eq etat_rem OR ETAT eq etat_rej ) .
+      LOOP AT lt_sous_trajet INTO wa_sous_trajet .
+
+          APPEND wa_sous_trajet TO display_sous_trajet.
+
+      ENDLOOP.
+
+
+LO_APPR->BUILD_FORM( ).
+
+CLASS APPR IMPLEMENTATION.
+
+METHOD BUILD_FORM.
+
+*---------------------------- Handle SALV table -------------------------------
+CALL METHOD cl_salv_table=>factory
+    EXPORTING
+      list_display = if_salv_c_bool_sap=>false
+    IMPORTING
+      r_salv_table = salv_table_ST
+    CHANGING
+      t_table      = display_sous_trajet.
+
+
+    CALL METHOD salv_table_ST->SET_SCREEN_STATUS
+        EXPORTING
+          REPORT        = SY-REPID
+          PFSTATUS      = 'STATUS'
+          SET_FUNCTIONS = salv_table_ST->C_FUNCTIONS_ALL.
+
+
+salv_table_ST->get_columns( )->set_optimize( abap_true ).
+salv_table_ST->get_selections( )->set_selection_mode( if_salv_c_selection_mode=>cell ).
+
+salv_columns = salv_table_ST->get_columns( ).
+
+salv_column ?= salv_columns->get_column( 'ETAT' ).
+salv_column->SET_LONG_TEXT( 'Etat' ).
+salv_column->SET_MEDIUM_TEXT( 'Etat' ).
+salv_column->SET_SHORT_TEXT( 'Etat' ).
+
+salv_column ?= salv_columns->get_column( 'DEPART' ).
+salv_column->SET_LONG_TEXT( 'Depart' ).
+salv_column->SET_MEDIUM_TEXT( 'Depart' ).
+salv_column->SET_SHORT_TEXT( 'De' ).
+
+salv_column ?= salv_columns->get_column( 'DESTINATION' ).
+salv_column->SET_LONG_TEXT( 'Destination' ).
+salv_column->SET_MEDIUM_TEXT( 'Destination' ).
+salv_column->SET_SHORT_TEXT( 'Des' ).
+
+salv_column ?= salv_columns->get_column( 'FRAIS' ).
+salv_column->SET_LONG_TEXT( 'Frais' ).
+salv_column->SET_MEDIUM_TEXT( 'Frais' ).
+salv_column->SET_SHORT_TEXT( 'Frais' ).
+
+salv_column ?= salv_columns->get_column( 'DISTANCE_PREVU' ).
+salv_column->SET_LONG_TEXT( 'Distance' ).
+salv_column->SET_MEDIUM_TEXT( 'Distance' ).
+salv_column->SET_SHORT_TEXT( 'Dis' ).
+
+salv_column ?= salv_columns->get_column( 'TRANSPORT' ).
+salv_column->SET_LONG_TEXT( 'Transport' ).
+salv_column->SET_MEDIUM_TEXT( 'Transport' ).
+salv_column->SET_SHORT_TEXT( 'Trans' ).
+
+
+salv_column ?= salv_columns->get_column( 'ID' ).
+salv_column->SET_LONG_TEXT( 'Id' ).
+salv_column->SET_MEDIUM_TEXT( 'Id' ).
+salv_column->SET_SHORT_TEXT( 'Id' ).
+
+salv_column ?= salv_columns->get_column( 'FK_TRAJET' ).
+salv_column->SET_LONG_TEXT( 'Trajet Spécifique associé' ).
+salv_column->SET_MEDIUM_TEXT( 'Trajet associé' ).
+salv_column->SET_SHORT_TEXT( 'Trajet' ).
+
+salv_column ?= salv_columns->get_column( 'FK_ROUTINE' ).
+salv_column->SET_LONG_TEXT( 'Trajet Routinier associé' ).
+salv_column->SET_MEDIUM_TEXT( 'Routine associé' ).
+salv_column->SET_SHORT_TEXT( 'Routine' ).
+
+* -------------Handle click handler creation-----------------
+CREATE OBJECT LO_CLICK.
+LO_EVENT = salv_table_ST->GET_EVENT( ).
+SET HANDLER LO_CLICK->ON_CLICK FOR LO_EVENT.
+
+salv_table_ST->display( ).
+
+ENDMETHOD.
+
+ENDCLASS.
+
+*--------------Click class implementation---------------------
+CLASS CL_CLICK IMPLEMENTATION.
+
+  METHOD ON_CLICK.
+    IF SY-UCOMM EQ '&APPR'.
+      CALL FUNCTION 'POPUP_TO_CONFIRM'
+        exporting
+          TEXT_QUESTION         =   'Approver ce(s) trajet(s)?'               " Question text in dialog box
+        importing
+          ANSWER                =   answer               " Return values: '1', '2', 'A'
+
+        .
+*      if sy-subrc <> 0.
+*       message id sy-msgid type sy-msgty number sy-msgno
+*         with sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+*      endif.
+
+*-------------Handle approve----------------------------------
+   IF answer eq '1'.
+      lo_selections = salv_table_ST->GET_SELECTIONS( ).
+      lt_rows = lo_selections->get_selected_rows( ).
+
+      DATA temp_sous_trajet TYPE STANDARD TABLE OF zhr_sous_trajet.
+      temp_sous_trajet[] = display_sous_trajet[].
+
+      loop at lt_rows into ls_row.
+        CLEAR wa_sous_trajet.
+        read table temp_sous_trajet index ls_row INTO wa_sous_trajet.
+          IF wa_sous_trajet-ETAT EQ 'SOU'.
+              wa_sous_trajet-ETAT = 'APP'.
+              UPDATE zhr_sous_trajet FROM wa_sous_trajet.
+              DELETE display_sous_trajet WHERE Id = wa_sous_trajet-Id.
+          ENDIF.
+      endloop.
+*             Handle trajet principal
+         IF wa_sous_trajet-FK_Routine IS INITIAL .
+
+             SELECT SINGLE * INTO CORRESPONDING FIELDS OF wa_trajet_spe FROM zhr_trajet  WHERE ID = wa_sous_trajet-FK_Trajet AND BEGDA <= sy-datum AND ENDDA > sy-datum.
+             wa_trajet_spe-etat = 'APP'.
+             UPDATE zhr_trajet FROM wa_trajet_spe.
+
+         ELSE.
+
+             DATA wa_trajet_rou like line of lt_routine.
+             SELECT  SINGLE * INTO CORRESPONDING FIELDS OF wa_routine FROM zhr_routine WHERE ID = wa_sous_trajet-FK_Routine AND BEGDA <= sy-datum  AND ENDDA > sy-datum.
+             wa_routine-etat = 'APP'.
+             UPDATE zhr_routine FROM wa_routine.
+
+         ENDIF.
+
+      lo_greenscore_update->update( ).
+    ENDIF.
+*--------------REBUILD FORM---------------------------------
+     salv_table_ST->REFRESH( ).
+
+
+*-----------Handle refuse-----------------------------------
+      ELSEIF SY-UCOMM EQ '&REF'.
+      CALL FUNCTION 'POPUP_TO_CONFIRM'
+        exporting
+          TEXT_QUESTION         =   'Refuser ce(s) trajet(s)?'               " Question text in dialog box
+        importing
+          ANSWER                =   answer               " Return values: '1', '2', 'A'
+        .
+*      if sy-subrc <> 0.
+*       message id sy-msgid type sy-msgty number sy-msgno
+*         with sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+*      endif.
+    IF answer eq '1'.
+      lo_selections = salv_table_ST->GET_SELECTIONS( ).
+      lt_rows = lo_selections->get_selected_rows( ).
+
+      temp_sous_trajet[] = display_sous_trajet[].
+
+      loop at lt_rows into ls_row.
+        CLEAR wa_sous_trajet.
+        read table temp_sous_trajet index ls_row INTO wa_sous_trajet.
+          IF wa_sous_trajet-ETAT EQ 'SOU'.
+              wa_sous_trajet-ETAT = 'REJ'.
+              UPDATE zhr_sous_trajet FROM wa_sous_trajet.
+              DELETE display_sous_trajet WHERE Id = wa_sous_trajet-Id.
+          ENDIF.
+      endloop.
+*             Handle trajet principal
+      IF wa_sous_trajet-FK_Routine IS INITIAL .
+
+          SELECT SINGLE * INTO CORRESPONDING FIELDS OF wa_trajet_spe FROM zhr_trajet  WHERE ID = wa_sous_trajet-FK_Trajet AND BEGDA <= sy-datum AND ENDDA > sy-datum.
+          wa_trajet_spe-etat = 'APP'.
+          UPDATE zhr_trajet FROM wa_trajet_spe.
+
+            ELSE.
+          SELECT  SINGLE * INTO CORRESPONDING FIELDS OF wa_routine FROM zhr_routine WHERE ID = wa_sous_trajet-FK_Routine AND BEGDA <= sy-datum AND ENDDA > sy-datum.
+          wa_routine-etat = 'APP'.
+          UPDATE zhr_routine FROM wa_routine.
+
+      ENDIF.
+
+     ENDIF.
+*--------------REBUILD FORM---------------------------------
+     salv_table_ST->REFRESH( ).
+
+   ENDIF.
+  ENDMETHOD.
+
+ENDCLASS.
+
+CLASS GREENSCORE_UPDATE IMPLEMENTATION.
+
+  METHOD UPDATE.
+
+    DATA lt_greenscore TYPE STANDARD TABLE OF zhr_greenscore.
+    DATA wa_greenscore LIKE LINE OF lt_greenscore.
+
+    DATA lt_sous_trajet TYPE STANDARD TABLE OF zhr_sous_trajet.
+    DATA wa_sous_trajet LIKe LINE OF lt_sous_trajet.
+
+    DATA transport LIKE wa_sous_trajet-transport.
+    DATA greenscore type zhr_greenscore-score.
+    DATA distance type F.
+    DATA frais type F.
+    DATA distanceTotal type F.
+    DATA fraisTotal type F.
+
+    DATA gsVoi type F.
+    DATA gsCov type F.
+    DATA gsBus type F.
+    DATA gsTrn type F.
+    DATA gsTrm type F.
+    DATA gsMet type F.
+    DATA gsPie type F.
+    DATA gsVel type F.
+
+    CONSTANTS coefVoi type F value '0.2'.
+    CONSTANTS coefCov type F value '0.3'.
+    CONSTANTS coefBus type F value '0.4'.
+    CONSTANTS coefTrn type F value '0.7'.
+    CONSTANTS coefTrm type F value '0.6'.
+    CONSTANTS coefMet type F value '0.7'.
+    CONSTANTS coefPie type F value '1'.
+    CONSTANTS coefVel type F value '1'.
+
+    select single * INTO wa_greenscore from zhr_greenscore WHERE pernr = pernr-pernr AND BEGDA <= sy-datum AND ENDDA > sy-datum.
+
+    Select * INTO table lt_sous_trajet from zhr_sous_trajet WHERE BEGDA <= sy-datum AND ENDDA > sy-datum AND etat eq 'APP'.
+
+* GET total distance + frais
+    LOOP AT lt_sous_trajet into wa_sous_trajet.
+
+      distance = wa_sous_trajet-distance_Prevu.
+      distanceTotal = distanceTotal + distance.
+      frais = wa_sous_trajet-frais.
+      fraisTotal = fraisTotal + frais.
+
+    ENDLOOP.
+
+* Calcul Greenscore + Update
+    LOOP AT lt_sous_trajet into wa_sous_trajet.
+
+      distance = wa_sous_trajet-distance_Prevu.
+      frais = wa_sous_trajet-frais.
+
+      CASE wa_sous_trajet-transport.
+        WHEN 'VOI'.
+          gsVoi = gsVoi + ( coefVoi * ( distance / distanceTotal ) ).
+        WHEN 'COV'.
+          gsCov = gsCov + ( coefCov * ( distance / distanceTotal )  ).
+        WHEN 'BUS'.
+          gsBus = gsBus + ( coefBus * ( frais / fraisTotal )  ).
+        WHEN 'TRN'.
+          gsTrn = gsTrn + ( coefTrn * ( frais / fraisTotal )  ).
+        WHEN 'TRM'.
+          gsTrm = gsTrm + ( coefTrm * ( frais / fraisTotal )  ).
+        WHEN 'MET'.
+          gsMet = gsMet + ( coefMet * ( frais / fraisTotal )  ).
+        WHEN 'PIE'.
+          gsPie = gsPie + ( coefPie * ( distance / distanceTotal )  ).
+        WHEN 'VEL'.
+          gsVel = gsVel + ( coefVel * ( distance / distanceTotal )  ).
+        ENDCASE.
+
+    ENDLOOP.
+
+    greenscore = ( gsVoi + gsCov + gsBus + gsTrn + gsTrm + gsMet + gsPie + gsVel ) * 50.
+    wa_greenscore-score = greenscore.
+    UPDATE zhr_greenscore FROM wa_greenscore.
+  ENDMETHOD.
+ENDCLASS.
+>>>>>>> main/main

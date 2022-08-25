@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *&---------------------------------------------------------------------*
 *& Report ZHR_PAY_TRANSPORT
 *&---------------------------------------------------------------------*
@@ -310,3 +311,317 @@ LOOP AT i_ptpsp INTO wa_ptpsp.
 *      Reset rembourser
       rembourser = 'X'.
     ENDLOOP.
+=======
+*&---------------------------------------------------------------------*
+*& Report ZHR_PAY_TRANSPORT
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZHR_PAY_TRANSPORT.
+
+
+
+
+data rembourser type boolean VALUE 'X'.
+data no_routine type boolean VALUE '-'.
+DATA record_key TYPE bapipakey.
+DATA return TYPE bapireturn1.
+
+*Pour le cas ou il y a plusieurs absences sur le même jour
+DATA heures TYPE i.
+
+data i_ptpsp type standard table of ptpsp WITH HEADER LINE.
+data wa_ptpsp like line of i_ptpsp.
+
+data lt_p2001 type STANDARD TABLE OF p2001 with header line.
+data wa_p2001 like line of lt_p2001.
+
+data lt_trajet type standard table of zhr_trajet.
+data wa_trajet like line of lt_trajet.
+data lt_routine type standard table of zhr_routine.
+data wa_routine like line of lt_routine.
+data lt_sous_trajet type standard table of zhr_sous_trajet.
+data wa_sous_trajet like line of lt_sous_trajet.
+data lt_pa0015 type standard table of p0015.
+data wa_pa0015 LIKE LINE OF lt_pa0015.
+
+
+data lt_times_per_day	 TYPE STANDARD TABLE OF PTM_TIMES_PER_DAY.
+data wa_times_per_day	 LIKE LINE OF lt_times_per_day.
+data ld_beguz	 TYPE P2001-BEGUZ.
+data ld_enduz	 TYPE P2001-ENDUZ.
+data ld_vtken	 TYPE P2001-VTKEN.
+data ld_stdaz	 TYPE P2001-STDAZ.
+
+data lv_pernr type p2001-pernr.
+data lv_begda type p2001-begda.
+data lv_endda type p2001-endda.
+
+INFOTYPES: 2001,2002,2003,0000,0001,0002,0007.
+TABLES: pernr.
+START-OF-SELECTION.
+GET PERNR.
+
+"get work schedule
+REFRESH i_ptpsp.
+CALL FUNCTION 'HR_PERSONAL_WORK_SCHEDULE'
+    exporting
+      pernr = pernr-pernr
+      begda = pn-begda
+      endda = pn-endda
+    tables
+      PERWS             = i_ptpsp
+    exceptions
+      ERROR_OCCURED     = 1
+      ABORT_OCCURED     = 2
+      OTHERS            = 3
+  .
+    if sy-subrc <> 0.
+*         message id sy-msgid type sy-msgty number sy-msgno
+*           with sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+*     Write: 'Error HR_PERSONAL_WORK_SCHEDULE:','Error id:',sy-msgid,'Error type:',sy-msgty,'Error number:',sy-msgno,'Error message:', sy-msgv1,sy-msgv2,sy-msgv3,sy-msgv4.
+
+    endif.
+
+    "si heures = 0 pas de remboursement ok
+    "si jour feri pas de remboursement ok
+
+LOOP AT i_ptpsp INTO wa_ptpsp.
+    IF wa_ptpsp-STDAZ eq 0 OR wa_ptpsp-TAGTY ne 0.
+        rembourser = '-'.
+      else.
+      PROVIDE * FROM P2001 BETWEEN PN-BEGDA AND PN-ENDDA.
+"si heures travail = herues abscense pas de remboursment ok
+      if   ( P2001-BEGDA eq p2001-ENDDA ) and ( P2001-STDAZ eq wa_ptpsp-STDAZ ) AND ( wa_ptpsp-DATUM eq p2001-BEGDA ).
+        rembourser = '-'.
+*si plusieurs types d'absences dans un même jour. --> faire la somme de toutes absences
+      elseif ( P2001-STDAZ < wa_ptpsp-STDAZ ) AND ( wa_ptpsp-DATUM eq p2001-BEGDA ) AND ( P2001-BEGDA eq P2001-ENDDA ).
+
+        LOOP AT P2001 INTO wa_p2001.
+          IF   wa_p2001-begda eq wa_p2001-endda AND wa_ptpsp-DATUM eq wa_p2001-BEGDA.
+             heures = heures +  wa_p2001-STDAZ.
+          ENDIF.
+        ENDLOOP.
+        IF heures eq wa_ptpsp-STDAZ.
+          rembourser = '-'.
+        ENDIF.
+
+*si absence couvre 1+ jours
+      elseif   P2001-KALTG > 1.
+        CALL FUNCTION 'HR_ABS_ATT_TIMES_AT_ENTRY'
+        exporting
+          PERNR              = pernr-pernr
+          AWART              = p2001-awart
+          BEGDA              = p2001-begda
+          ENDDA              = p2001-endda
+*          USE_VARIANT        = 'X'
+        importing
+          ABWTG              = lt_p2001-ABWTG
+          ABRTG              = lt_p2001-ABRTG
+          ABRST              = lt_p2001-ABRST
+          KALTG              = lt_p2001-KALTG
+          HRSIF              = lt_p2001-HRSIF
+          ALLDF              = lt_p2001-ALLDF
+*          ERROR_WO_EXCEPTION =
+        tables
+          M0000              = p0000
+          M0001              = p0001
+          M0002              = p0002
+          M0007              = p0007
+          M2001              = p2001
+          M2002              = p2002
+          M2003              = p2003
+*          PWS                =
+          TIMES_PER_DAY      = lt_times_per_day
+        changing
+          BEGUZ              =  ld_beguz
+          ENDUZ              =  ld_enduz
+          VTKEN              =  ld_vtken
+          STDAZ              =  ld_stdaz
+    .
+          if sy-subrc <> 0.
+*           message id sy-msgid type sy-msgty number sy-msgno
+*           with sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+            Write: 'Error HR_PERSONAL_WORK_SCHEDULE:','Error id:',sy-msgid,'Error type:',sy-msgty,'Error number:',sy-msgno,'Error message:', sy-msgv1,sy-msgv2,sy-msgv3,sy-msgv4.
+          endif.
+
+          loop at lt_times_per_day into wa_times_per_day.
+            IF wa_times_per_day-STDAZ eq wa_ptpsp-STDAZ AND wa_times_per_day-DATUM eq wa_ptpsp-DATUM.
+              rembourser = '-'.
+            ENDIF.
+          endloop.
+        ENDIF.
+       ENDPROVIDE.
+      ENDIF.
+
+
+      write: 'Work schedule: ',wa_ptpsp-datum,'shift type:',wa_ptpsp-TPROG,'work hours planned',wa_ptpsp-STDAZ,'day type',wa_ptpsp-TAGTY,/.
+
+*      Remboursement
+      IF rembourser eq 'X'.
+*      -------------------------IF trajet specifique exsits--------------------------------------
+       SELECT * FROM zhr_trajet INTO CORRESPONDING FIELDS OF wa_trajet WHERE BEGDA = wa_ptpsp-datum AND pernr = pernr-pernr AND ETAT eq 'APP'. ENDSELECT.
+
+          IF sy-subrc eq 0.
+           SELECT * FROM zhr_sous_trajet INTO TABLE lt_sous_trajet WHERE Fk_Trajet = wa_trajet-Id.
+             LOOP AT lt_sous_trajet INTO wa_sous_trajet.
+*               IF trajet is approved --> rembourse ELSE continue loop.
+               IF wa_sous_trajet-ETAT eq 'APP'.
+
+                IF wa_sous_trajet-transport eq 'VOI' OR wa_sous_trajet-transport eq 'COV' OR wa_sous_trajet-transport eq 'PIE' OR wa_sous_trajet-transport eq 'VEL'.
+                    wa_pa0015-subty = 'M821'.
+                    wa_pa0015-zeinh = '051'.
+                    wa_pa0015-pernr = pernr-pernr.
+                    wa_pa0015-anzhl = wa_sous_trajet-distance_Prevu.
+                    wa_pa0015-begda = wa_ptpsp-datum.
+                    wa_pa0015-endda = wa_ptpsp-datum.
+                    wa_pa0015-lgart = 'M821'.
+                 ELSE.
+                    wa_pa0015-subty = 'M980'.
+                    wa_pa0015-waers = 'EUR'.
+                    wa_pa0015-pernr = pernr-pernr.
+                    wa_pa0015-betrg = wa_sous_trajet-frais.
+                    wa_pa0015-begda = wa_ptpsp-datum.
+                    wa_pa0015-endda = wa_ptpsp-datum.
+                    wa_pa0015-lgart = 'M980'.
+                ENDIF.
+
+
+*               Currency : EUR Measurement: 051 (kms)
+                CALL FUNCTION 'HR_EMPLOYEE_ENQUEUE'
+                  EXPORTING
+                  number = wa_pa0015-pernr.
+                CALL FUNCTION 'HR_INFOTYPE_OPERATION'
+                  exporting
+                    INFTY            = '0015'
+                    NUMBER           = wa_pa0015-pernr
+                    SUBTYPE          = wa_pa0015-subty
+*                    OBJECTID         =
+*                    LOCKINDICATOR    =
+                    VALIDITYEND      = wa_pa0015-begda
+                    VALIDITYBEGIN    = wa_pa0015-endda
+*                    RECORDNUMBER     =
+                    RECORD           = wa_pa0015
+                    OPERATION        = 'INS'
+*                    TCLAS            = 'A'
+                     DIALOG_MODE      = '1'
+*                    NOCOMMIT         =
+*                    VIEW_IDENTIFIER  =
+*                    SECONDARY_RECORD =
+                   importing
+                     RETURN           = return
+*                    KEY              =
+                  .
+
+                IF return-type <> 'E'.
+                  write:'Remboursement:',rembourser,'Encodage réussit (Trajet specifique)',return-message,/.
+                     wa_sous_trajet-ETAT = 'REM'.
+                     UPDATE zhr_sous_trajet FROM wa_sous_trajet.
+                   ELSE.
+                   write:'Remboursement:',rembourser,'Encodage échoué (Trajet spe',return-message,/.
+                ENDIF.
+
+                CALL FUNCTION 'HR_EMPLOYEE_DEQUEUE'
+                  EXPORTING
+                  number = wa_pa0015-pernr.
+
+
+                CLEAR wa_pa0015.
+                ELSE.
+                  rembourser = '-'.
+                  WRITE:'Remboursement:',rembourser,'(Trajet refusé ou pas encore approuvé)',/.
+                  CONTINUE.
+              ENDIF.
+             ENDLOOP.
+
+           ELSE.
+*      --------------------------------ELSE base remboursement on trajet routinier--------------------------------------
+             SELECT * FROM zhr_routine INTO CORRESPONDING FIELDS OF wa_routine WHERE pernr = pernr-pernr. ENDSELECT.
+              IF sy-subrc eq 0.
+             SELECT * FROM zhr_sous_trajet INTO TABLE lt_sous_trajet WHERE Fk_Routine = wa_routine-Id.
+             LOOP AT lt_sous_trajet INTO wa_sous_trajet.
+
+*               IF routine is approved --> rembourse else do nothing.
+               IF wa_sous_trajet-ETAT eq 'APP' OR wa_sous_trajet-ETAT eq 'REM'.
+
+
+
+                IF wa_sous_trajet-transport eq 'VOI' OR wa_sous_trajet-transport eq 'COV' OR wa_sous_trajet-transport eq 'PIE' OR wa_sous_trajet-transport eq 'VEL'.
+                    wa_pa0015-subty = 'M821'.
+                    wa_pa0015-zeinh = '051'.
+                    wa_pa0015-pernr = pernr-pernr.
+                    wa_pa0015-anzhl = wa_sous_trajet-distance_Prevu.
+                    wa_pa0015-begda = wa_ptpsp-datum.
+                    wa_pa0015-endda = wa_ptpsp-datum.
+                    wa_pa0015-lgart = 'M821'. "Does not exist in T512z
+                 ELSE.
+                    wa_pa0015-subty = 'M980'.
+                    wa_pa0015-waers = 'EUR'.
+                    wa_pa0015-pernr = pernr-pernr.
+                    wa_pa0015-betrg = wa_sous_trajet-frais.
+                    wa_pa0015-begda = wa_ptpsp-datum.
+                    wa_pa0015-endda = wa_ptpsp-datum.
+                    wa_pa0015-lgart = 'M980'.
+                ENDIF.
+
+                CALL FUNCTION 'HR_EMPLOYEE_ENQUEUE'
+                  EXPORTING
+                  number = wa_pa0015-pernr.
+                CALL FUNCTION 'HR_INFOTYPE_OPERATION'
+                  exporting
+                    INFTY            = '0015'
+                    NUMBER           = wa_pa0015-pernr
+                    SUBTYPE          = wa_pa0015-subty
+*                    OBJECTID         =
+*                    LOCKINDICATOR    =
+                    VALIDITYEND      = wa_pa0015-begda
+                    VALIDITYBEGIN    = wa_pa0015-endda
+*                    RECORDNUMBER     =
+                    RECORD           = wa_pa0015
+                    OPERATION        = 'INS'
+*                    TCLAS            = 'A'
+                     DIALOG_MODE      = '1'
+*                    NOCOMMIT         =
+*                    VIEW_IDENTIFIER  =
+*                    SECONDARY_RECORD =
+                   importing
+                     RETURN           = return
+*                    KEY              =
+                  .
+                IF return-type <> 'E'.
+                       wa_sous_trajet-ETAT = 'REM'.
+                       UPDATE zhr_sous_trajet FROM wa_sous_trajet.
+                       write:'Remboursement:',rembourser,'Encodage réussi (Trajet routinier)',return-message,/.
+                  ELSE.
+                   write:'Remboursement:',rembourser,'Encodage échoué (Trajet routinier',return-message,/.
+                ENDIF.
+
+                 CALL FUNCTION 'HR_EMPLOYEE_DEQUEUE'
+                  EXPORTING
+                  number = wa_pa0015-pernr.
+                 CLEAR wa_pa0015.
+
+               ELSE.
+                   rembourser = '-'.
+                   WRITE:'Remboursement:',rembourser,'(Remboursement refusé ou pas encore approuvé)'.
+                   CONTINUE.
+               ENDIF.
+             ENDLOOP.
+
+              ELSE.
+                 Write:'Pas de trajets  pour cet user',pernr.
+                 no_routine = 'X'.
+            ENDIF.
+         ENDIF.
+      ENDIF.
+
+
+*     Exit work schedule loop if no routine
+      IF no_routine = 'X'.
+        no_routine = '-'.
+        EXIT.
+      ENDIF.
+*      Reset rembourser
+      rembourser = 'X'.
+    ENDLOOP.
+>>>>>>> main/main

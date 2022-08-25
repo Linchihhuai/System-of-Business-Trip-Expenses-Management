@@ -1,3 +1,4 @@
+<<<<<<< HEAD
   method ROUTINESET_CREATE_ENTITY.
 
     DATA lt_routine TYPE STANDARD TABLE OF zhr_routine.
@@ -55,3 +56,62 @@
         ENDIF.
 
   endmethod.
+=======
+  method ROUTINESET_CREATE_ENTITY.
+
+    DATA lt_routine TYPE STANDARD TABLE OF zhr_routine.
+    DATA wa_routine LIKE LINE OF lt_routine.
+
+    DATA return TYPE STANDARD TABLE OF bapireturn1.
+    DATA ls_return LIKE LINE OF return.
+
+    DATA lv_Pernr TYPE zhr_routine-pernr.
+    select single pernr  INTO lv_Pernr from pa0105 where USRID = sy-uname  AND subty = '0001' AND BEGDA <= sy-datum AND ENDDA > sy-datum.
+
+    io_data_provider->read_entry_data( IMPORTING es_data = er_entity ).
+
+    DATA eventID TYPE i.
+        call function 'QF05_RANDOM_INTEGER'
+          exporting
+            RAN_INT_MAX   = 99999999              " Greatest required value
+            RAN_INT_MIN   = 1                " Smallest required value
+          importing
+            RAN_INT       =  eventID                " Random number
+*          exceptions
+*            INVALID_INPUT = 1                " RAN_INT_MIN > RAN_INT_MAX
+*            OTHERS        = 2
+          .
+        if sy-subrc <> 0.
+         message id sy-msgid type sy-msgty number sy-msgno
+           with sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+        endif.
+
+        wa_routine-pernr = lv_Pernr.
+        wa_routine-id = eventID.
+        wa_routine-nom = er_entity-nom.
+        wa_routine-begda = er_entity-begda.
+        wa_routine-endda = er_entity-endda.
+        wa_routine-distance_prevu = er_entity-distance_prevu.
+        wa_routine-distance_parcouru = er_entity-distance_parcouru.
+        wa_routine-temps_prevu = er_entity-temps_prevu.
+        wa_routine-temps_en_motion = er_entity-temps_en_motion.
+        wa_routine-remarque_admin = er_entity-remarque_admin.
+        wa_routine-remarque_user = er_entity-remarque_user.
+        wa_routine-nbr_routine_realisee = er_entity-nbr_routine_realisee.
+        wa_routine-montant_rembourse =  er_entity-montant_rembourse.
+        wa_routine-etat = er_entity-etat.
+        wa_routine-raison_trajet = er_entity-raison_trajet.
+        wa_routine-mode_encodage = er_entity-mode_encodage.
+
+        er_entity-ID = eventID.
+
+        INSERT INTO zhr_routine VALUES wa_routine.
+
+        IF sy-subrc <> 0.
+         RAISE EXCEPTION TYPE /IWBEP/CX_MGW_BUSI_EXCEPTION
+         EXPORTING textid = /IWBEP/CX_MGW_BUSI_EXCEPTION=>business_error
+         message = ls_return-message.
+        ENDIF.
+
+  endmethod.
+>>>>>>> main/main

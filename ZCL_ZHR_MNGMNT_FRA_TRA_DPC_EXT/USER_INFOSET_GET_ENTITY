@@ -1,3 +1,4 @@
+<<<<<<< HEAD
   method USER_INFOSET_GET_ENTITY.
 
 
@@ -73,3 +74,80 @@ ELSE.
    message = 'No data found'.
 endif.
   endmethod.
+=======
+  method USER_INFOSET_GET_ENTITY.
+
+
+
+DATA home TYPE STRING.
+DATA work TYPE STRING.
+
+DATA ls_cl TYPE REF TO CL_HCMFAB_FB_COMMON.
+DATA ls_address TYPE HCMFAB_S_ADDRESS.
+
+DATA lv_Pernr TYPE pa0105-pernr.
+
+*---------------GET adresse travail ---------------------*
+
+
+select single pernr  INTO lv_Pernr from pa0105 where USRID = sy-uname  AND subty = '0001' AND BEGDA <= sy-datum AND ENDDA > sy-datum.
+
+
+er_entity-pernr = lv_Pernr.
+
+CREATE OBJECT ls_cl TYPE CL_HCMFAB_FB_COMMON.
+ls_cl->IF_EX_HCMFAB_COMMON~GET_OFFICE_ADDRESS(
+  EXPORTING
+    IV_PERNR = lv_Pernr
+    IV_APPLICATION_ID ='1'
+  IMPORTING
+    ES_OFFICE_ADDRESS = ls_address
+).
+
+
+CONCATENATE ls_address-OFFICE_STREET ls_address-OFFICE_BUILDING work ls_address-OFFICE_CITY work ls_address-OFFICE_POSTAL_CODE INTO work SEPARATED BY ' '.
+CONDENSE work.
+er_entity-ADDR_TRAVAIL = WORK.
+
+*---------------GET adresse maison---------------------*
+
+DATA lt_p0006 TYPE STANDARD TABLE OF pa0006.
+DATA wa_p0006 LIKE LINE OF lt_p0006.
+
+
+select single pernr  INTO lv_Pernr from pa0105 where USRID = sy-uname  AND subty = '0001' AND BEGDA <= sy-datum AND ENDDA >= sy-datum.
+
+
+CALL FUNCTION 'HR_READ_INFOTYPE'
+  exporting
+*    TCLAS           = 'A'              " Transaction Class (Person, Applicant)
+    PERNR           =  lv_Pernr               " Personnel Number/Applicant Number
+    INFTY           =  '0006'                " Infotype
+    BEGDA           = '18000101'       " Start Date
+    ENDDA           = '99991231'       " End Date
+*    BYPASS_BUFFER   = ' '
+*    LEGACY_MODE     = SPACE
+*  importing
+*    SUBRC           =                  " Return Code
+  tables
+    INFTY_TAB       =    lt_p0006              " Infotype Table
+*  exceptions
+*    INFTY_NOT_FOUND = 1                " Infotype Does Not Exist
+*    OTHERS          = 2
+  .
+if sy-subrc = 0.
+* message id sy-msgid type sy-msgty number sy-msgno
+*   with sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+  READ TABLE lt_p0006 INDEX 1 INTO wa_p0006.
+
+CONCATENATE wa_p0006-STRAS wa_p0006-HSNMR wa_p0006-ORT01 wa_p0006-PSTLZ  wa_p0006-LAND1 INTO home SEPARATED BY ' '.
+CONDENSE home.
+SHIFT home LEFT DELETING LEADING ' '.
+  er_entity-ADDR_MAISON = home.
+ELSE.
+   RAISE EXCEPTION TYPE /IWBEP/CX_MGW_BUSI_EXCEPTION
+   EXPORTING textid = /IWBEP/CX_MGW_BUSI_EXCEPTION=>business_error
+   message = 'No data found'.
+endif.
+  endmethod.
+>>>>>>> main/main
