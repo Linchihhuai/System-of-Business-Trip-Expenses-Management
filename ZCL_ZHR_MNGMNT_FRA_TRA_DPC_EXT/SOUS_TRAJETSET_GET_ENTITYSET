@@ -1,0 +1,47 @@
+  method SOUS_TRAJETSET_GET_ENTITYSET.
+
+
+    DATA lt_sous_trajet TYPE STANDARD TABLE OF zhr_sous_trajet.
+    DATA wa_sous_trajet LIKE LINE OF lt_sous_trajet.
+    DATA es_entity LIKE LINE OF et_entityset.
+
+    DATA lv_Fk  TYPE zhr_sous_trajet-Fk_Trajet.
+
+    io_tech_request_context->get_filter( )->get_filter_select_options( ).
+    lv_Fk = io_tech_request_context->get_filter( )->get_filter_string( ).
+
+
+    SELECT * FROM zhr_sous_trajet  INTO TABLE lt_sous_trajet WHERE Fk_Trajet = lv_Fk OR Fk_Routine = lv_Fk AND ENDDA > sy-datum.
+
+
+
+    LOOP AT lt_sous_trajet INTO wa_sous_trajet.
+      clear es_entity.
+    IF sy-subrc = 0.
+      es_entity-mandt = sy-mandt.
+      es_entity-ID = wa_sous_trajet-ID.
+      es_entity-nom = wa_sous_trajet-nom.
+      es_entity-begda = wa_sous_trajet-begda.
+      es_entity-endda = wa_sous_trajet-endda.
+      es_entity-distance_prevu = wa_sous_trajet-distance_prevu.
+      es_entity-distance_parcouru = wa_sous_trajet-distance_parcouru.
+      es_entity-temps_prevu = wa_sous_trajet-temps_prevu.
+      es_entity-temps_en_motion = wa_sous_trajet-temps_en_motion.
+      es_entity-montant_rembourse = wa_sous_trajet-montant_rembourse.
+      es_entity-frais = wa_sous_trajet-frais.
+      es_entity-etat = wa_sous_trajet-etat.
+      es_entity-transport = wa_sous_trajet-transport.
+      es_entity-depart = wa_sous_trajet-depart.
+      es_entity-destination = wa_sous_trajet-destination.
+      es_entity-FK_trajet = wa_sous_trajet-FK_trajet.
+      es_entity-FK_routine = wa_sous_trajet-FK_routine.
+
+      APPEND es_entity to et_entityset.
+      ELSE.
+        RAISE EXCEPTION TYPE /IWBEP/CX_MGW_BUSI_EXCEPTION
+        EXPORTING textid = /IWBEP/CX_MGW_BUSI_EXCEPTION=>business_error
+        message = 'User doesn’t exist.'.
+    ENDIF.
+    ENDLOOP.
+
+  endmethod.
