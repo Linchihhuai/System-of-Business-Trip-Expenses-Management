@@ -1,6 +1,8 @@
 ### Systeme-of-Travel-Fee-Management
 My personal internship project at Haute Ecole Leonard de Vinci, Institut Paul Lambin and at the Belgian company Persolis located in Wallonia, Belgium. The original name of the project is "Système de gestion des frais de transport" in French. The project is originally named in French which is the company's professional language. In this Readme. The project will be refered to by its English name. It's an SAP project. The frontend is developed in SAPUI5 and the backend with Persolis' SAP system. The app aims to helps Belgian companies (or companiesthat compensate employee's travel fee) digitalise the process of travel/commute cost process.From the employee end (data collection) to the HR end (data processing). With that said, it is not a general purpose app. 
 
+The app belongs now to Persolis as dictated by internship accord with them. This repository serves as an example of that I am capable of developping. 
+
 ### Table of Content
 1. [Technology](#Technology)
 2. [Deployment and launch](#Deployment-and-launch)
