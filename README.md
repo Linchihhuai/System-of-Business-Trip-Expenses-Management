@@ -22,7 +22,7 @@ For an employee :
 
 
 For the HR: 
-1. A program uses the Time Management Module of SAP ERP to determine which days in the selected range are compensable. 
+1. A program that allows the HR to see the data transmitted by the employee and approve or refuse their compensation request.
 2. A program determines the type of compensation (if an employee travels by car, on foot , bike or other type of public transportation) and writes the necessary data in the SAP system for compensation.
 
 
