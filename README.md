@@ -17,7 +17,7 @@ The app belongs now to Persolis as dictated by internship accord with them. This
 ### Using System of Travel Fee Management
 You are an employee : 
 1. Get updates on your compensation from the last month and see how green you have travelled.
-![main page](https://i.imgur.com/ep7OV1x.jpg?3)
+![main page](https://i.imgur.com/ep7OV1x.jpg?5) 
 2. Quickly fill out all the necessary infos of your next business trip.
 ![form page](https://i.imgur.com/zl5K3zh.jpg?2)
 3. Keep track of the business you have undertaken.
