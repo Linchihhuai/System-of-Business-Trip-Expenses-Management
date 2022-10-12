@@ -17,21 +17,21 @@ The app belongs now to Persolis as dictated by internship accord with them. This
 ### Using System of Travel Fee Management
 You are an employee : 
 1. Get updates on your compensation from the last month and see how green you have travelled.
-![main paeg](https://imgur.com/ep7OV1x)
+![main page](https://i.imgur.com/ep7OV1x.jpg?1)
 2. Quickly fill out all the necessary infos of your next business trip.
-![form page](https://imgur.com/zl5K3zh)
+![form page](https://i.imgur.com/zl5K3zh.jpg?2)
 3. Keep track of the business you have undertaken.
-![voyage list page](https://imgur.com/CuRC8yC)
+![voyage list page](https://i.imgur.com/CuRC8yC.jpg)
 4. Going on foot or by bike? Use the built-in GPS to show them how dedicated to the environment (and your health!) you are !
-![GPS](https://imgur.com/PmyXqWt)
+![GPS](https://i.imgur.com/PmyXqWt.jpg)
 5. Transmit data to the HR.
-![voyage detail page](https://imgur.com/SDG7afS)
+![voyage detail page](https://i.imgur.com/SDG7afS.jpg)
 
 You are the HR: 
 1. Select the period and the employee whose business trip compensation needs validation.
-![selection page](https://imgur.com/olLP9qJ)
+![selection page](https://i.imgur.com/olLP9qJ.png)
 2. Validate or refuse compensation with the easy-to-use interface.
-![validation page](https://imgur.com/olLP9qJ)
+![validation page](https://i.imgur.com/c4hEQFR.png)
 3. Generate the month report with a click.
 ![report page](https://imgur.com/vwOpZre)
 
