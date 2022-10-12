@@ -19,6 +19,7 @@ You are an employee :
 1. Get updates on your compensation from the last month and see how green you have travelled.
 
 ![main page](https://i.imgur.com/ep7OV1x.jpg?5) 
+
 2. Quickly fill out all the necessary infos of your next business trip.
 
 ![form page](https://i.imgur.com/MahGzdK.jpg)
@@ -37,10 +38,15 @@ You are an employee :
 
 You are the HR: 
 1. Select the period and the employee whose business trip compensation needs validation.
+
 ![selection page](https://i.imgur.com/olLP9qJ.png)
+
 2. Validate or refuse compensation with the easy-to-use interface.
+
 ![validation page](https://i.imgur.com/c4hEQFR.png)
+
 3. Generate the month report with a click.
+
 ![report page](https://i.imgur.com/vwOpZre.png)
 
 
