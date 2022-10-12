@@ -19,13 +19,13 @@ You are an employee :
 1. Get updates on your compensation from the last month and see how green you have travelled.
 ![main page](https://i.imgur.com/ep7OV1x.jpg?5) 
 2. Quickly fill out all the necessary infos of your next business trip.
-![form page](https://i.imgur.com/zl5K3zh.jpg?2)
+![form page](https://i.imgur.com/MahGzdK.jpg)
 3. Keep track of the business you have undertaken.
-![voyage list page](https://i.imgur.com/CuRC8yC.jpg)
+![voyage list page](https://i.imgur.com/z5SPewX.jpg)
 4. Going on foot or by bike? Use the built-in GPS to show them how dedicated to the environment (and your health!) you are !
-![GPS](https://i.imgur.com/PmyXqWt.jpg)
+![GPS](https://i.imgur.com/iHgWihc.jpg)
 5. Transmit data to the HR.
-![voyage detail page](https://i.imgur.com/SDG7afS.jpg)
+![voyage detail page](https://i.imgur.com/SDG7afS.jpg?1)
 
 You are the HR: 
 1. Select the period and the employee whose business trip compensation needs validation.
