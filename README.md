@@ -33,7 +33,7 @@ You are the HR:
 2. Validate or refuse compensation with the easy-to-use interface.
 ![validation page](https://i.imgur.com/c4hEQFR.png)
 3. Generate the month report with a click.
-![report page](https://imgur.com/vwOpZre)
+![report page](https://i.imgur.com/vwOpZre.png)
 
 
 ### Technology
