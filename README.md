@@ -15,15 +15,25 @@ System of Travel Fee Management is a SAP solution for all the enterprises that c
 The app belongs now to Persolis as dictated by internship accord with them. This repository serves as an example of that I am capable of developping. 
 
 ### Using System of Travel Fee Management
-For an employee : 
-1. Filling out necessariy informations via a form.
-2. Recording commute/business via GPS with OpenStreetMap.
-3. Transmitting data to the HR
+You are an employee : 
+1. Get updates on your compensation from the last month and see how green you have travelled.
+![main paeg](https://imgur.com/ep7OV1x)
+2. Quickly fill out all the necessary infos of your next business trip.
+![form page](https://imgur.com/zl5K3zh)
+3. Keep track of the business you have undertaken.
+![voyage list page](https://imgur.com/CuRC8yC)
+4. Going on foot or by bike? Use the built-in GPS to show them how dedicated to the environment (and your health!) you are !
+![GPS](https://imgur.com/PmyXqWt)
+5. Transmit data to the HR.
+![voyage detail page](https://imgur.com/SDG7afS)
 
-
-For the HR: 
-1. A program that allows the HR to see the data transmitted by the employee and approve or refuse their compensation request.
-2. A program determines the type of compensation (if an employee travels by car, on foot , bike or other type of public transportation) and writes the necessary data in the SAP system for compensation.
+You are the HR: 
+1. Select the period and the employee whose business trip compensation needs validation.
+![selection page](https://imgur.com/olLP9qJ)
+2. Validate or refuse compensation with the easy-to-use interface.
+![validation page](https://imgur.com/olLP9qJ)
+3. Generate the month report with a click.
+![report page](https://imgur.com/vwOpZre)
 
 
 ### Technology
