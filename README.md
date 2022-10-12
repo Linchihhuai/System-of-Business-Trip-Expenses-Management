@@ -20,7 +20,7 @@ You are an employee :
 ![main page](https://i.imgur.com/ep7OV1x.jpg?5) 
 2. Quickly fill out all the necessary infos of your next business trip.
 ![form page](https://i.imgur.com/MahGzdK.jpg)
-3. Keep track of the business you have undertaken.
+3. Keep track of the business you have undertaken .
 ![voyage list page](https://i.imgur.com/z5SPewX.jpg)
 4. Going on foot or by bike? Use the built-in GPS to show them how dedicated to the environment (and your health!) you are !
 ![GPS](https://i.imgur.com/iHgWihc.jpg)
