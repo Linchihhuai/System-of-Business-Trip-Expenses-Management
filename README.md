@@ -18,7 +18,7 @@ The app belongs now to Persolis as dictated by internship accord with them. This
 The main technology used for the project is SAP, a human resource solution developed by a German company with the same name. SAP provides a wide range of modules for building web and mobile applications. There are the SAP modules used in my project: 
 
 1. SAPUI5
-SAPUI5 is a frontend library specifically designed for developping SAP apps. It allows developpers to quickly developpe a responsive professional grade graphical user interface for an SAP application.
+SAPUI5 is a Javascript framework and UI library specifically designed for developping SAP apps. It allows developpers to quickly developpe a responsive professional grade graphical user interface for an SAP application.
 
 2. ABAP (Advanced Business Application Programming)
 ABAP is the programming language used for interacting with the SAP system and the database resided in the said system. In my application, I used ABAP to implement API logic, database, selection screen and the generation of reports. 
