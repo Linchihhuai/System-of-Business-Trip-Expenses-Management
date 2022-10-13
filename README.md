@@ -1,4 +1,4 @@
-### Systeme-of-Travel-Fee-Management
+### System-of-Business-Trip-Expenses-Management
 ![SAP](https://logos-download.com/wp-content/uploads/2016/08/SAP_logo.png)
 
 ### Table of Content
@@ -20,13 +20,17 @@ The main technology used for the project is SAP, a human resource solution devel
 1. SAPUI5
 SAPUI5 is a frontend library specifically designed for developping SAP apps. It allows developpers to quickly developpe a responsive professional grade graphical user interface for an SAP application.
 
-2. SAP HR Time Management.
+2. ABAP (Advanced Business Application Programming)
+ABAP is the programming language used for interacting with the SAP system and the database resided in the said system. In my application, I used ABAP to implement API logic, database, selection screen and the generation of reports. 
+
+
+3. SAP HR Time Management.
 This module provides a series of software that allows the human ressource of a company to efficiently manage their employees schedules. In my project, The Time Management Module contains information about an employee's work schedule such as their work routine, holidays, and hours of work per week. In my project, the Module is used to determine if a date is compensable by checking if a day is a work day or not. An employee's commute fee is compensated by the company only if a day is a work day. 
 
-3. SAP HR Payroll Accounting.
+4. SAP HR Payroll Accounting.
 This module provides services that allow a company to calculate and manage its employees payment. In my project, commute/travel compensation is recorded and managed in this module. 
 
-4. SAP HR Organizational Management.
+5. SAP HR Organizational Management.
 This module allows the modelization of a company. It defines the structure of the company through organizational nodes as well as the fonctions of its employees. This module contains also a ride range of information that a company might hold. In my project, I consulted information such as a client company's address and an employee's home address. As they are information already stored in the module, there is no need to create another entity if the SAP Dictionary (Definition of a data entity) in the SAP system.
 
 ### Using-System-of-Business-Trip-Expenses-Management
