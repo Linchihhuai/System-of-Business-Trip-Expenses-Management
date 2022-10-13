@@ -3,8 +3,8 @@
 
 ### Table of Content
 * [Introduction](#Introduction)
-* [Using System of Travem Fee Management](#Using-System-of-Travel-Fee-Management)
 * [Technology](#Technology)
+* [Using System of Business Trip Expenses Management](#Using-System-of-Business-Trip-Expenses-Management)
 * [Deployment and launch](#Deployment-and-launch)
 
 ### Introduction
@@ -14,7 +14,22 @@ System of Travel Fee Management is a SAP solution for all the enterprises that c
 
 The app belongs now to Persolis as dictated by internship accord with them. This repository serves as an example of that I am capable of developping. 
 
-### Using System of Travel Fee Management
+### Technology
+The main technology used for the project is SAP, a human resource solution developed by a German company with the same name. SAP provides a wide range of modules for building web and mobile applications. There are the SAP modules used in my project: 
+
+1. SAPUI5
+SAPUI5 is a frontend library specifically designed for developping SAP apps. It allows developpers to quickly developpe a responsive professional grade graphical user interface for an SAP application.
+
+2. SAP HR Time Management.
+This module provides a series of software that allows the human ressource of a company to efficiently manage their employees schedules. In my project, The Time Management Module contains information about an employee's work schedule such as their work routine, holidays, and hours of work per week. In my project, the Module is used to determine if a date is compensable by checking if a day is a work day or not. An employee's commute fee is compensated by the company only if a day is a work day. 
+
+3. SAP HR Payroll Accounting.
+This module provides services that allow a company to calculate and manage its employees payment. In my project, commute/travel compensation is recorded and managed in this module. 
+
+4. SAP HR Organizational Management.
+This module allows the modelization of a company. It defines the structure of the company through organizational nodes as well as the fonctions of its employees. This module contains also a ride range of information that a company might hold. In my project, I consulted information such as a client company's address and an employee's home address. As they are information already stored in the module, there is no need to create another entity if the SAP Dictionary (Definition of a data entity) in the SAP system.
+
+### Using-System-of-Business-Trip-Expenses-Management
 You are an employee : 
 1. Get updates on your compensation from the last month and see how green you have travelled.
 
@@ -48,22 +63,6 @@ You are the HR:
 3. Generate the month report with a click.
 
 ![report page](https://i.imgur.com/vwOpZre.png)
-
-
-### Technology
-The main technology used for the project is SAP, a human resource solution developed by a German company with the same name. SAP provides a wide range of modules for building web and mobile applications. There are the SAP modules used in my project: 
-
-1. SAPUI5
-SAPUI5 is a frontend library specifically designed for developping SAP apps. It allows developpers to quickly developpe a responsive professional grade graphical user interface for an SAP application.
-
-2. SAP HR Time Management.
-This module provides a series of software that allows the human ressource of a company to efficiently manage their employees schedules. In my project, The Time Management Module contains information about an employee's work schedule such as their work routine, holidays, and hours of work per week. In my project, the Module is used to determine if a date is compensable by checking if a day is a work day or not. An employee's commute fee is compensated by the company only if a day is a work day. 
-
-3. SAP HR Payroll Accounting.
-This module provides services that allow a company to calculate and manage its employees payment. In my project, commute/travel compensation is recorded and managed in this module. 
-
-4. SAP HR Organizational Management.
-This module allows the modelization of a company. It defines the structure of the company through organizational nodes as well as the fonctions of its employees. This module contains also a ride range of information that a company might hold. In my project, I consulted information such as a client company's address and an employee's home address. As they are information already stored in the module, there is no need to create another entity if the SAP Dictionary (Definition of a data entity) in the SAP system.
 
 ### Deployment and launch
 The app is deployed via the SAP portal. 
